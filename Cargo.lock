@@ -9,12 +9,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
-name = "byteorder"
-version = "1.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
-
-[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -31,41 +25,36 @@ dependencies = [
 
 [[package]]
 name = "fluent-bundle"
-version = "0.11.0"
+version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27ade33328521266c81cc0924523988f43ccd7359f64689a1b6e818afca3a646"
+checksum = "e242c601dec9711505f6d5bbff5bedd4b61b2469f2e8bb8e57ee7c9747a87ffd"
 dependencies = [
  "fluent-langneg",
  "fluent-syntax",
  "intl-memoizer",
  "intl_pluralrules",
- "rental",
+ "rustc-hash",
+ "self_cell",
  "smallvec",
  "unic-langid",
 ]
 
 [[package]]
 name = "fluent-langneg"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe5815efd5542e40841cd34ef9003822352b04c67a70c595c6758597c72e1f56"
+checksum = "2c4ad0989667548f06ccd0e306ed56b61bd4d35458d54df5ec7587c0e8ed5e94"
 dependencies = [
  "unic-langid",
 ]
 
 [[package]]
 name = "fluent-syntax"
-version = "0.9.3"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ac0f7e83d14cccbf26e165d8881dcac5891af0d85a88543c09dd72ebd31d91ba"
-
-[[package]]
-name = "fxhash"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c31b6d751ae2c7f11320402d34e41349dd1016f8d5d45e48c4312bc8625af50c"
+checksum = "c0abed97648395c902868fee9026de96483933faa54ea3b40d652f7dfe61ca78"
 dependencies = [
- "byteorder",
+ "thiserror",
 ]
 
 [[package]]
@@ -74,6 +63,7 @@ version = "0.1.0"
 dependencies = [
  "fluent-bundle",
  "fluent-langneg",
+ "intl-memoizer",
  "lazy_static",
  "tempfile",
  "unic-langid",
@@ -90,9 +80,9 @@ dependencies = [
 
 [[package]]
 name = "intl-memoizer"
-version = "0.4.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9867e2d65d82936ef34217ed0f87b639a94384e93a0676158142c861c705391f"
+checksum = "c310433e4a310918d6ed9243542a6b83ec1183df95dff8f23f87bb88a264a66f"
 dependencies = [
  "type-map",
  "unic-langid",
@@ -100,9 +90,9 @@ dependencies = [
 
 [[package]]
 name = "intl_pluralrules"
-version = "6.0.0"
+version = "7.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d82c14d8eece42c03353e0ce86a4d3f97b1f1cef401e4d962dca6c6214a85002"
+checksum = "b18f988384267d7066cc2be425e6faf352900652c046b6971d2e228d3b1c5ecf"
 dependencies = [
  "tinystr",
  "unic-langid",
@@ -163,37 +153,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "rental"
-version = "0.5.6"
+name = "rustc-hash"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc89fe2acac36d212474d138aaf939c04a82df5b61d07011571ebce5aef81f2e"
-dependencies = [
- "rental-impl",
- "stable_deref_trait",
-]
+checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
-name = "rental-impl"
-version = "0.5.5"
+name = "self_cell"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "475e68978dc5b743f2f40d8e0a8fdc83f1c5e78cbf4b8fa5e74e73beebc340de"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
+checksum = "1ef965a420fe14fdac7dd018862966a4c14094f900e1650bbc71ddd7d580c8af"
 
 [[package]]
 name = "smallvec"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2dd574626839106c320a323308629dcb1acfc96e32a8cba364ddc61ac23ee83"
-
-[[package]]
-name = "stable_deref_trait"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "syn"
@@ -221,6 +196,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "thiserror"
+version = "1.0.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "854babe52e4df1653706b98fcfc05843010039b406875930a70e4d9644e5c417"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aa32fd3f627f367fe16f893e2597ae3c05020f8bba2666a4e6ea73d377e5714b"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "tinystr"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -228,18 +223,18 @@ checksum = "29738eedb4388d9ea620eeab9384884fc3f06f586a2eddb56bedc5885126c7c1"
 
 [[package]]
 name = "type-map"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d2741b1474c327d95c1f1e3b0a2c3977c8e128409c572a33af2914e7d636717"
+checksum = "b6d3364c5e96cb2ad1603037ab253ddd34d7fb72a58bdddf4b7350760fc69a46"
 dependencies = [
- "fxhash",
+ "rustc-hash",
 ]
 
 [[package]]
 name = "unic-langid"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24d81136159f779c35b10655f45210c71cd5ca5a45aadfe9840a61c7071735ed"
+checksum = "73328fcd730a030bdb19ddf23e192187a6b01cd98be6d3140622a89129459ce5"
 dependencies = [
  "unic-langid-impl",
  "unic-langid-macros",
@@ -247,18 +242,18 @@ dependencies = [
 
 [[package]]
 name = "unic-langid-impl"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c43c61e94492eb67f20facc7b025778a904de83d953d8fcb60dd9adfd6e2d0ea"
+checksum = "1a4a8eeaf0494862c1404c95ec2f4c33a2acff5076f64314b465e3ddae1b934d"
 dependencies = [
  "tinystr",
 ]
 
 [[package]]
 name = "unic-langid-macros"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49bd90791278634d57e3ed4a4073108e3f79bfb87ab6a7b8664ba097425703df"
+checksum = "18f980d6d87e8805f2836d64b4138cc95aa7986fa63b1f51f67d5fbff64dd6e5"
 dependencies = [
  "proc-macro-hack",
  "tinystr",
@@ -268,9 +263,9 @@ dependencies = [
 
 [[package]]
 name = "unic-langid-macros-impl"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0098f77bd754f8fb7850cdf4ab143aa821898c4ac6dc16bcb2aa3e62ce858d1"
+checksum = "29396ffd97e27574c3e01368b1a64267d3064969e4848e2e130ff668be9daa9f"
 dependencies = [
  "proc-macro-hack",
  "quote",

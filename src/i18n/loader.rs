@@ -11,22 +11,20 @@ use std::io;
 use std::io::prelude::*;
 use std::path::Path;
 
-use fluent_bundle::concurrent::FluentBundle;
-use fluent_bundle::{FluentResource, FluentValue};
+use fluent_bundle::{FluentArgs, FluentResource};
 use fluent_langneg::negotiate_languages;
 
 pub use unic_langid::{langid, langids, LanguageIdentifier};
+
+pub type FluentBundle<R> =
+    fluent_bundle::bundle::FluentBundle<R, intl_memoizer::concurrent::IntlLangMemoizer>;
 
 /// Something capable of looking up Fluent keys given a language.
 ///
 /// Use [SimpleLoader] if you just need the basics
 pub trait Loader {
-    fn lookup(
-        &self,
-        lang: &LanguageIdentifier,
-        text_id: &str,
-        args: Option<&HashMap<&str, FluentValue>>,
-    ) -> String;
+    fn lookup(&self, lang: &LanguageIdentifier, text_id: &str, args: Option<&FluentArgs>)
+        -> String;
 }
 
 /// Loads Fluent data at runtime via `lazy_static` to produce a loader.
@@ -72,7 +70,7 @@ macro_rules! simple_loader {
     ($constructor:ident, $location:expr, $fallback:expr) => {
         ::lazy_static::lazy_static! {
             static ref RESOURCES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_resources($location);
-            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, ::fluent_bundle::concurrent::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&&RESOURCES, None, |_bundle| {});
+            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, $crate::i18n::loader::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&&RESOURCES, None, |_bundle| {});
             static ref LOCALES: Vec<$crate::i18n::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
             static ref FALLBACKS: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<$crate::i18n::loader::LanguageIdentifier>> = $crate::i18n::loader::build_fallbacks(&*LOCALES);
         }
@@ -85,7 +83,7 @@ macro_rules! simple_loader {
         ::lazy_static::lazy_static! {
             static ref CORE_RESOURCE: ::fluent_bundle::FluentResource = $crate::i18n::loader::load_core_resource($core);
             static ref RESOURCES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_resources($location);
-            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, ::fluent_bundle::concurrent::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&*RESOURCES, Some(&CORE_RESOURCE), $custom);
+            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, $crate::i18n::loader::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&*RESOURCES, Some(&CORE_RESOURCE), $custom);
             static ref LOCALES: Vec<$crate::i18n::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
             static ref FALLBACKS: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<$crate::i18n::loader::LanguageIdentifier>> = $crate::i18n::loader::build_fallbacks(&*LOCALES);
         }
@@ -148,10 +146,10 @@ impl SimpleLoader {
         &self,
         lang: &LanguageIdentifier,
         text_id: &str,
-        args: Option<&HashMap<&str, FluentValue>>,
+        args: Option<&FluentArgs>,
     ) -> Option<String> {
         if let Some(bundle) = self.bundles.get(lang) {
-            if let Some(message) = bundle.get_message(text_id).and_then(|m| m.value) {
+            if let Some(message) = bundle.get_message(text_id).and_then(|m| m.value()) {
                 let mut errors = Vec::new();
 
                 let value = bundle.format_pattern(&message, dbg!(args), &mut errors);
@@ -177,7 +175,7 @@ impl SimpleLoader {
         &self,
         lang: &LanguageIdentifier,
         text_id: &str,
-        args: Option<&HashMap<&str, FluentValue>>,
+        args: Option<&FluentArgs>,
     ) -> Option<String> {
         for l in self.fallbacks.get(lang).expect("language not found") {
             if let Some(val) = self.lookup_single_language(l, text_id, args) {
@@ -195,7 +193,7 @@ impl Loader for SimpleLoader {
         &self,
         lang: &LanguageIdentifier,
         text_id: &str,
-        args: Option<&HashMap<&str, FluentValue>>,
+        args: Option<&FluentArgs>,
     ) -> String {
         for l in self.fallbacks.get(lang).expect("language not found") {
             if let Some(val) = self.lookup_single_language(l, text_id, args) {
@@ -242,7 +240,8 @@ pub fn create_bundle(
     core_resource: Option<&'static FluentResource>,
     customizer: &impl Fn(&mut FluentBundle<&'static FluentResource>),
 ) -> FluentBundle<&'static FluentResource> {
-    let mut bundle: FluentBundle<&'static FluentResource> = FluentBundle::new(&[lang]);
+    let mut bundle: FluentBundle<&'static FluentResource> =
+        FluentBundle::new_concurrent(vec![lang]);
     if let Some(core) = core_resource {
         bundle
             .add_resource(core)
@@ -295,7 +294,6 @@ pub fn load_core_resource(path: &str) -> FluentResource {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use fluent_bundle::concurrent::FluentBundle;
     use std::error::Error;
 
     #[test]
@@ -309,7 +307,8 @@ mod tests {
         let result = read_from_dir(dir.path())?;
         assert_eq!(2, result.len()); // Doesn't include the binary file or the txt file
 
-        let mut bundle = FluentBundle::new(&[unic_langid::langid!("en-US")]);
+        const EN_US: LanguageIdentifier = unic_langid::langid!("en-US");
+        let mut bundle = FluentBundle::new_concurrent(vec![EN_US]);
         for resource in &result {
             bundle.add_resource(resource).unwrap();
         }
@@ -320,7 +319,7 @@ mod tests {
         assert_eq!(
             "bar",
             bundle.format_pattern(
-                bundle.get_message("foo").and_then(|m| m.value).unwrap(),
+                bundle.get_message("foo").and_then(|m| m.value()).unwrap(),
                 None,
                 &mut errors
             )
@@ -329,7 +328,7 @@ mod tests {
         assert_eq!(
             "baz",
             bundle.format_pattern(
-                bundle.get_message("bar").and_then(|m| m.value).unwrap(),
+                bundle.get_message("bar").and_then(|m| m.value()).unwrap(),
                 None,
                 &mut errors
             )
