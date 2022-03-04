@@ -70,28 +70,28 @@ pub trait Loader {
 #[macro_export]
 macro_rules! simple_loader {
     ($constructor:ident, $location:expr, $fallback:expr) => {
-        $crate::lazy_static::lazy_static! {
-            static ref RESOURCES: std::collections::HashMap<$crate::loader::LanguageIdentifier, Vec<$crate::fluent_bundle::FluentResource>> = $crate::loader::build_resources($location);
-            static ref BUNDLES: std::collections::HashMap<$crate::loader::LanguageIdentifier, $crate::fluent_bundle::concurrent::FluentBundle<&'static $crate::fluent_bundle::FluentResource>> = $crate::loader::build_bundles(&&RESOURCES, None, |_bundle| {});
-            static ref LOCALES: Vec<$crate::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
-            static ref FALLBACKS: std::collections::HashMap<$crate::loader::LanguageIdentifier, Vec<$crate::loader::LanguageIdentifier>> = $crate::loader::build_fallbacks(&*LOCALES);
+        ::lazy_static::lazy_static! {
+            static ref RESOURCES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_resources($location);
+            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, ::fluent_bundle::concurrent::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&&RESOURCES, None, |_bundle| {});
+            static ref LOCALES: Vec<$crate::i18n::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
+            static ref FALLBACKS: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<$crate::i18n::loader::LanguageIdentifier>> = $crate::i18n::loader::build_fallbacks(&*LOCALES);
         }
 
-        pub fn $constructor() -> $crate::loader::SimpleLoader {
-            $crate::loader::SimpleLoader::new(&*BUNDLES, &*FALLBACKS, $fallback.parse().expect("fallback language not valid"))
+        pub fn $constructor() -> $crate::i18n::loader::SimpleLoader {
+            $crate::i18n::loader::SimpleLoader::new(&*BUNDLES, &*FALLBACKS, $fallback.parse().expect("fallback language not valid"))
         }
     };
     ($constructor:ident, $location:expr, $fallback:expr, core: $core:expr, customizer: $custom:expr) => {
-        $crate::lazy_static::lazy_static! {
-            static ref CORE_RESOURCE: $crate::fluent_bundle::FluentResource = $crate::loader::load_core_resource($core);
-            static ref RESOURCES: std::collections::HashMap<$crate::loader::LanguageIdentifier, Vec<$crate::fluent_bundle::FluentResource>> = $crate::loader::build_resources($location);
-            static ref BUNDLES: std::collections::HashMap<$crate::loader::LanguageIdentifier, $crate::fluent_bundle::concurrent::FluentBundle<&'static $crate::fluent_bundle::FluentResource>> = $crate::loader::build_bundles(&*RESOURCES, Some(&CORE_RESOURCE), $custom);
-            static ref LOCALES: Vec<$crate::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
-            static ref FALLBACKS: std::collections::HashMap<$crate::loader::LanguageIdentifier, Vec<$crate::loader::LanguageIdentifier>> = $crate::loader::build_fallbacks(&*LOCALES);
+        ::lazy_static::lazy_static! {
+            static ref CORE_RESOURCE: ::fluent_bundle::FluentResource = $crate::i18n::loader::load_core_resource($core);
+            static ref RESOURCES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_resources($location);
+            static ref BUNDLES: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, ::fluent_bundle::concurrent::FluentBundle<&'static ::fluent_bundle::FluentResource>> = $crate::i18n::loader::build_bundles(&*RESOURCES, Some(&CORE_RESOURCE), $custom);
+            static ref LOCALES: Vec<$crate::i18n::loader::LanguageIdentifier> = RESOURCES.keys().cloned().collect();
+            static ref FALLBACKS: std::collections::HashMap<$crate::i18n::loader::LanguageIdentifier, Vec<$crate::i18n::loader::LanguageIdentifier>> = $crate::i18n::loader::build_fallbacks(&*LOCALES);
         }
 
-        pub fn $constructor() -> $crate::loader::SimpleLoader {
-            $crate::loader::SimpleLoader::new(&*BUNDLES, &*FALLBACKS, $fallback.parse().expect("fallback language not valid"))
+        pub fn $constructor() -> $crate::i18n::loader::SimpleLoader {
+            $crate::i18n::loader::SimpleLoader::new(&*BUNDLES, &*FALLBACKS, $fallback.parse().expect("fallback language not valid"))
         }
     };
 }
