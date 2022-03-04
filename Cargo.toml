@@ -7,3 +7,11 @@ authors = [
 edition = "2021"
 
 [dependencies]
+# i18n
+fluent-bundle = "0.11"
+fluent-langneg = "0.12"
+lazy_static = "1.2"
+unic-langid = { version = "0.8", features = ["macros"] }
+
+[dev-dependencies]
+tempfile = "3.1"
