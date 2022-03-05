@@ -1,0 +1,16 @@
+{% extends "components/layout.html" %}
+
+{% block title %}{{ lang.m("index-title") }}{% endblock %}
+
+{% block main %}
+<div class="uk-section uk-section-primary">
+    <div id="content" class="uk-container">
+        <h1 class="uk-heading-line uk-text-center"><span>{{ lang.m("halo-2") }}</span></h1>
+    </div>
+</div>
+<div class="uk-section uk-section-default">
+    <div id="content" class="uk-container">
+        {{ lang.m("tagline")}}
+    </div>
+</div>
+{% endblock %}
