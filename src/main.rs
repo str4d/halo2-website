@@ -36,6 +36,7 @@ async fn main() {
 #[template(path = "index.html")]
 struct IndexTemplate {
     lang: i18n::Language,
+    locales: &'static [i18n::LocaleInfo],
 }
 
 async fn index() -> IndexTemplate {
@@ -46,5 +47,6 @@ async fn index() -> IndexTemplate {
 async fn render_index(lang: LanguageIdentifier) -> IndexTemplate {
     IndexTemplate {
         lang: i18n::Language::new(lang),
+        locales: i18n::EXPLICIT_LOCALE_INFO,
     }
 }

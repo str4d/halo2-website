@@ -2,6 +2,13 @@
 
 {% block title %}{{ lang.m("index-title") }}{% endblock %}
 
+{% block head %}
+<!-- locales -->
+{% for locale in locales %}
+<link rel="alternate" href="https://halo2.dev/{{locale.lang}}" hreflang="{{locale.lang}}">{% endfor %}
+<link rel="alternate" href="https://halo2.dev/" hreflang="x-default">
+{% endblock %}
+
 {% block main %}
 <div class="uk-section uk-section-primary">
     <div id="content" class="uk-container">

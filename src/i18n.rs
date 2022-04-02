@@ -41,3 +41,17 @@ impl Language {
         self.loader.lookup(&self.lang, text_id, None)
     }
 }
+
+/// A locale for which we have translations.
+pub struct LocaleInfo {
+    pub lang: &'static str,
+    pub text: &'static str,
+}
+
+/// The list of locales for which we have translations.
+///
+/// This list is used to create crosslinks between localized versions of pages.
+pub const EXPLICIT_LOCALE_INFO: &[LocaleInfo] = &[LocaleInfo {
+    lang: "en-US",
+    text: "English",
+}];
