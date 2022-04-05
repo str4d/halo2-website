@@ -1,5 +1,10 @@
 use askama::Template;
-use axum::{routing::get, Router};
+use axum::{
+    http::StatusCode,
+    routing::{get, get_service},
+    Router,
+};
+use tower_http::services::ServeDir;
 use tracing::instrument;
 use tracing_subscriber::fmt::format::FmtSpan;
 use unic_langid::LanguageIdentifier;
@@ -21,7 +26,17 @@ async fn main() {
         .with_span_events(FmtSpan::CLOSE)
         .init();
 
-    let app = Router::new().route("/", get(index));
+    let app = Router::new()
+        .nest(
+            "/static",
+            get_service(ServeDir::new("static")).handle_error(|error: std::io::Error| async move {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Unhandled internal error: {}", error),
+                )
+            }),
+        )
+        .route("/", get(index));
 
     // IPv6 + IPv6 any addr
     let addr = ([0, 0, 0, 0, 0, 0, 0, 0], 3000).into();

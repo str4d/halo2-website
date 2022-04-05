@@ -10,6 +10,7 @@ edition = "2021"
 # Webserver
 axum = "0.4"
 tokio = { version = "1.0", features = ["full"] }
+tower-http = { version = "0.2", features = ["fs"] }
 tracing = "0.1"
 tracing-subscriber = { version="0.3", features = ["env-filter"] }
 

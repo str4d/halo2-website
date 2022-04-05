@@ -3,6 +3,10 @@
 {% block title %}{{ lang.m("index-title") }}{% endblock %}
 
 {% block head %}
+<!-- highlight.js -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/styles/default.min.css">
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/highlight.min.js"></script>
+
 <!-- locales -->
 {% for locale in locales %}
 <link rel="alternate" href="https://halo2.dev/{{locale.lang}}" hreflang="{{locale.lang}}">{% endfor %}
@@ -11,13 +15,87 @@
 
 {% block main %}
 <div class="uk-section uk-section-primary">
-    <div id="content" class="uk-container">
+    <div class="uk-container">
         <h1 class="uk-heading-line uk-text-center"><span>{{ lang.m("halo-2") }}</span></h1>
+        <p class="uk-text-center">{{ lang.m("meta-description") }}</p>
     </div>
 </div>
 <div class="uk-section uk-section-default">
-    <div id="content" class="uk-container">
-        {{ lang.m("tagline")}}
+    <div class="uk-container">
+        <h2>{{ lang.m("what-is-halo-2") }}</h2>
+        <p>{{ lang.ma("what-is-halo-2-answer", lang.a().v("urlHalo", "<a href=\"https://eprint.iacr.org/2019/1021\"
+                target=\"_new\">").v("urlPLONK", "<a href=\"https://eprint.iacr.org/2019/953\"
+                    target=\"_new\">").v("urlPCS", "<a
+                        href=\"https://zcash.github.io/halo2/design/proving-system/comparison.html#bcms20-appendix-a2\"
+                        target=\"_new\">").v("urlProtocol", "<a
+                            href=\"https://zcash.github.io/halo2/design/protocol.html\" target=\"_new\">").v("urlEnd",
+                            "</a>")) | escape("none") }}</p>
+        <p>{{ lang.m("what-is-halo-2-impl") }}</p>
+        <div class="uk-child-width-expand@s uk-grid-match" uk-grid>
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                    <div class="uk-card-title">
+                        <span uk-icon="icon: nut; ratio: 1.5"></span>
+                        <a href="https://crates.io/crates/halo2_proofs" target="_new">
+                            <code class="uk-text-large">halo2_proofs</code>
+                        </a>
+                        <a href="https://github.com/zcash/halo2/tree/main/halo2_proofs" uk-icon="github"
+                            target="_new"></a>
+                    </div>
+                    <p>{{ lang.m("crate-desc-halo2_proofs") }}</p>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                    <div class="uk-card-title">
+                        <span uk-icon="icon: cog; ratio: 1.5"></span>
+                        <a href="https://crates.io/crates/halo2_gadgets" target="_new">
+                            <code class="uk-text-large">halo2_gadgets</code>
+                        </a>
+                        <a href="https://github.com/zcash/halo2/tree/main/halo2_gadgets" uk-icon="github"
+                            target="_new"></a>
+                    </div>
+                    <p>{{ lang.m("crate-desc-halo2_gadgets") }}</p>
+                </div>
+            </div>
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover uk-card-body">
+                    <div class="uk-card-title">
+                        <span uk-icon="icon: refresh; ratio: 1.5"></span>
+                        <a href="https://crates.io/crates/halo2" target="_new">
+                            <code class="uk-text-large">halo2</code>
+                        </a>
+                        <a href="https://github.com/zcash/halo2/tree/main/halo2" uk-icon="github" target="_new"></a>
+                    </div>
+                    <p>{{ lang.m("crate-desc-halo2") }}</p>
+                    <p>{{ lang.m("coming-soon") }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<div class="uk-section uk-section-muted">
+    <div class="uk-container">
+        <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-2-3@m">
+                <a href="https://github.com/zcash/orchard/blob/main/src/circuit.rs" target="_new">
+                    <img src="/static/images/orchard-action-circuit.png">
+                </a>
+            </div>
+            <div class="uk-width-1-3@m">
+                <p>{{ lang.m("circuit-description") }}</p>
+                <h3>{{ lang.m("column-types") }}</h3>
+                <ul class="uk-list uk-list-disc">
+                    <li>{{ lang.m("column-type-instance") }}</li>
+                    <li>{{ lang.m("column-type-advice") }}</li>
+                    <li>{{ lang.m("column-type-fixed") }}</li>
+                    <li>{{ lang.m("column-type-selector") }}</li>
+                </ul>
+                <p>{{ lang.m("column-types-legend") }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>hljs.highlightAll();</script>
 {% endblock %}

@@ -1,8 +1,9 @@
 //! Internationalization support.
 
+use std::borrow::Cow;
 use std::fmt;
 
-use fluent_bundle::FluentResource;
+use fluent_bundle::{FluentArgs, FluentResource, FluentValue};
 use unic_langid::{langid, LanguageIdentifier};
 
 use self::loader::{Loader, SimpleLoader};
@@ -17,6 +18,21 @@ crate::simple_loader!(
     customizer: add_bundle_functions);
 
 fn add_bundle_functions(_bundle: &mut loader::FluentBundle<&'static FluentResource>) {}
+
+pub struct LangArgs<'args> {
+    args: FluentArgs<'args>,
+}
+
+impl<'args> LangArgs<'args> {
+    pub fn v<K, V>(mut self, key: K, value: V) -> Self
+    where
+        K: Into<Cow<'args, str>>,
+        V: Into<FluentValue<'args>>,
+    {
+        self.args.set(key, value);
+        self
+    }
+}
 
 pub struct Language {
     lang: LanguageIdentifier,
@@ -39,6 +55,16 @@ impl Language {
 
     pub fn m(&self, text_id: &str) -> String {
         self.loader.lookup(&self.lang, text_id, None)
+    }
+
+    pub fn a(&self) -> LangArgs<'_> {
+        LangArgs {
+            args: FluentArgs::new(),
+        }
+    }
+
+    pub fn ma(&self, text_id: &str, args: LangArgs<'_>) -> String {
+        self.loader.lookup(&self.lang, text_id, Some(&args.args))
     }
 }
 
