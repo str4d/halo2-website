@@ -51,6 +51,11 @@ column-types-legend =
     fixed columns in light blue; and selector columns in dark blue. Regions are
     shown in light green, and assigned cells in dark green or black.
 
+resources = Resources
+the-halo-2-book = The {halo-2} book
+circuit-tutorial = Tutorial for writing circuits
+example-circuits = Example circuits
+
 office-hours-next = Next: {$officeHoursDate}
 office-hours-hook =
     Come chat to us in the {$urlOfficeHours}{halo-2} Discord channel{$urlEnd}
