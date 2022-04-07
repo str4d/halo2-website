@@ -4,11 +4,13 @@ use axum::{
     routing::{get, get_service},
     Router,
 };
+use time::Weekday;
 use tower_http::services::ServeDir;
 use tracing::instrument;
 use tracing_subscriber::fmt::format::FmtSpan;
 use unic_langid::LanguageIdentifier;
 
+mod calendar;
 mod i18n;
 
 #[tokio::main]
@@ -50,6 +52,7 @@ async fn main() {
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
+    cal: calendar::Calendar,
     lang: i18n::Language,
     locales: &'static [i18n::LocaleInfo],
 }
@@ -61,6 +64,7 @@ async fn index() -> IndexTemplate {
 #[instrument]
 async fn render_index(lang: LanguageIdentifier) -> IndexTemplate {
     IndexTemplate {
+        cal: calendar::Calendar::new(&[Weekday::Tuesday]),
         lang: i18n::Language::new(lang),
         locales: i18n::EXPLICIT_LOCALE_INFO,
     }

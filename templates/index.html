@@ -96,6 +96,34 @@
         </div>
     </div>
 </div>
+<div class="uk-section uk-section-muted">
+    <div class="uk-container">
+        <div class="uk-child-width-1-2@m uk-child-width-1-3@l uk-grid-small uk-grid-match" uk-grid="masonry: true">
+            <div>
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div>
+                        {% include "components/panels/calendar.html" %}
+                    </div>
+                    <div class="uk-margin-top">
+                        <h4>{{ lang.ma("office-hours-next", lang.a().v("officeHoursDate",
+                            cal.next_highlighted_day()))
+                            }}
+                        </h4>
+                        <ul class="uk-list uk-list-disc">
+                            <li>9am PDT</li>
+                            <li>12pm EDT</li>
+                            <li>4pm UTC</li>
+                            <li>6pm CEST</li>
+                        </ul>
+                        <p>{{ lang.ma("office-hours-hook", lang.a().v("urlOfficeHours", "<a
+                                href=\"https://discord.gg/dJCnzK2rdc\" target=\"_new\">").v("urlEnd", "</a>")) |
+                            escape("none") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>hljs.highlightAll();</script>
 {% endblock %}

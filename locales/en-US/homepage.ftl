@@ -50,3 +50,32 @@ column-types-legend =
     different backgrounds. The instance column in white; advice columns in red;
     fixed columns in light blue; and selector columns in dark blue. Regions are
     shown in light green, and assigned cells in dark green or black.
+
+office-hours-next = Next: {$officeHoursDate}
+office-hours-hook =
+    Come chat to us in the {$urlOfficeHours}{halo-2} Discord channel{$urlEnd}
+    about the proving system, the Rust crates, circuits you might be having
+    trouble with, or anything else related to {halo-2}!
+
+## components/panels/calendar-small.html
+
+month-january = January
+month-february = February
+month-march = March
+month-april = April
+month-may = May
+month-june = June
+month-july = July
+month-august = August
+month-september = September
+month-october = October
+month-november = November
+month-december = December
+
+weekday-short-mon = Mon
+weekday-short-tue = Tue
+weekday-short-wed = Wed
+weekday-short-thu = Thu
+weekday-short-fri = Fri
+weekday-short-sat = Sat
+weekday-short-sun = Sun

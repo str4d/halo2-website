@@ -25,5 +25,8 @@ intl-memoizer = "0.5"
 lazy_static = "1.2"
 unic-langid = { version = "0.9", features = ["macros"] }
 
+# Page features
+time = "0.3"
+
 [dev-dependencies]
 tempfile = "3.1"

@@ -1,0 +1,30 @@
+<style>
+    .uk-child-width-1-7>* {
+        width: calc(100% * 1 / 7.001);
+    }
+</style>
+
+<div class="uk-tile uk-tile-default uk-padding-remove">
+    <div class="uk-padding-remove-bottom uk-width-1-1">
+        <h3><span uk-icon="icon: calendar; ratio: 1.5"></span> Office Hours: {{ lang.m(cal.month()) }}</h3>
+        <div class="uk-text-center uk-child-width-1-7 uk-margin-remove-left" uk-grid>
+            {% for i in 1..=7 %}
+            <div class="uk-tile uk-tile-secondary uk-padding-remove">
+                <p class="uk-h5">{{ lang.m(cal.weekday_short_name(i)) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="uk-child-width-1-7 uk-text-center uk-flex-left uk-margin-remove-top uk-margin-remove-left uk-grid-match"
+        uk-grid margin>
+        {% for i in 1..cal.first_day_of_month() %}
+        <div class='uk-flex-first'></div>
+        {% endfor %}
+        {% for i in 1..=cal.days_this_month() %}
+        <div
+            class="uk-card uk-card-body uk-card-hover uk-card-small {% if cal.highlight_day(i) %}uk-card-primary{% else %}uk-card-default{% endif %}">
+            <span class="uk-position-top">{{ i }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
