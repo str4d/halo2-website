@@ -51,10 +51,80 @@ async fn main() {
         .unwrap();
 }
 
+const EXAMPLE_CIRCUIT: &str = "const WIDTH: usize = 3;
+const RATE: usize = 2;
+
+#[derive(Clone)]
+struct HashConfig {
+    poseidon_config: poseidon::Pow5Config<pallas::Base, WIDTH, RATE>,
+    message_col: Column<Advice>,
+    digest_col: Column<Instance>,
+}
+
+struct HashCircuit {
+    message: Option<pallas::Base>,
+}
+
+impl Circuit<pallas::Base> for HashCircuit {
+    type Config = HashConfig;
+    type FloorPlanner = floor_planner::V1;
+
+    fn without_witnesses(&self) -> Self {
+        Self { message: None }
+    }
+
+    fn configure(meta: &mut ConstraintSystem<pallas::Base>) -> HashConfig {
+        let state = [0; WIDTH].map(|_| meta.advice_column());
+        let partial_sbox = meta.advice_column();
+        let rc_a = [0; WIDTH].map(|_| meta.fixed_column());
+        let rc_b = [0; WIDTH].map(|_| meta.fixed_column());
+        let digest_col = meta.instance_column();
+        meta.enable_constant(rc_b[0]);
+        meta.enable_equality(digest_col);
+
+        let poseidon_config =
+            poseidon::Pow5Chip::configure::<P128Pow5T3>(meta, state, partial_sbox, rc_a, rc_b);
+
+        HashConfig {
+            poseidon_config,
+            message_col: state[0],
+            digest_col,
+        }
+    }
+
+    fn synthesize(
+        &self,
+        config: HashConfig,
+        mut layouter: impl Layouter<pallas::Base>,
+    ) -> Result<(), Error> {
+        let message = layouter.assign_region(
+            || \"load message\",
+            |mut region| {
+                let word = region.assign_advice(
+                    || \"message\",
+                    config.message_col,
+                    0,
+                    || self.message.ok_or(Error::Synthesis),
+                )?;
+                Ok([word])
+            },
+        )?;
+
+        let hasher = poseidon::Hash::<_, _, P128Pow5T3, ConstantLength<1>, WIDTH, RATE>::init(
+            poseidon::Pow5Chip::construct(config.poseidon_config),
+            layouter.namespace(|| \"init\"),
+        )?;
+        let output = hasher.hash(layouter.namespace(|| \"digest\"), message)?;
+
+        layouter.constrain_instance(output.cell(), config.digest_col, 0)
+    }
+}";
+
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
     cal: calendar::Calendar,
+    example_circuit: &'static str,
     lang: i18n::Language,
     locales: &'static [i18n::LocaleInfo],
 }
@@ -71,6 +141,7 @@ async fn index_locale(Path(lang): Path<LanguageIdentifier>) -> IndexTemplate {
 async fn render_index(lang: LanguageIdentifier) -> IndexTemplate {
     IndexTemplate {
         cal: calendar::Calendar::new(&[Weekday::Tuesday]),
+        example_circuit: EXAMPLE_CIRCUIT,
         lang: i18n::Language::new(lang),
         locales: i18n::EXPLICIT_LOCALE_INFO,
     }

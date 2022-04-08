@@ -51,6 +51,14 @@ column-types-legend =
     fixed columns in light blue; and selector columns in dark blue. Regions are
     shown in light green, and assigned cells in dark green or black.
 
+api-description =
+    TODO: Talk about Rust API for writing circuits.
+
+    Foo bar baz.
+api-gadgets-and-chips =
+    Circuit developers may want to make different trade-offs (for example, using
+    more columns, or a lower maximum degree). To enable this,
+
 resources = Resources
 the-halo-2-book = The {halo-2} book
 circuit-tutorial = Tutorial for writing circuits
