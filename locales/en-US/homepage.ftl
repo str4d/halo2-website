@@ -56,6 +56,10 @@ the-halo-2-book = The {halo-2} book
 circuit-tutorial = Tutorial for writing circuits
 example-circuits = Example circuits
 
+get-involved = Get Involved!
+get-involved-hook =
+    Write gadgets and chips!
+
 office-hours-next = Next: {$officeHoursDate}
 office-hours-hook =
     Come chat to us in the {$urlOfficeHours}{halo-2} Discord channel{$urlEnd}
