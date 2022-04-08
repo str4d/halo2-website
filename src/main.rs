@@ -1,5 +1,6 @@
 use askama::Template;
 use axum::{
+    extract::Path,
     http::StatusCode,
     routing::{get, get_service},
     Router,
@@ -38,7 +39,8 @@ async fn main() {
                 )
             }),
         )
-        .route("/", get(index));
+        .route("/", get(index))
+        .route("/:lang", get(index_locale));
 
     // IPv6 + IPv6 any addr
     let addr = ([0, 0, 0, 0, 0, 0, 0, 0], 3000).into();
@@ -59,6 +61,10 @@ struct IndexTemplate {
 
 async fn index() -> IndexTemplate {
     render_index(i18n::EN_US).await
+}
+
+async fn index_locale(Path(lang): Path<LanguageIdentifier>) -> IndexTemplate {
+    render_index(lang).await
 }
 
 #[instrument]

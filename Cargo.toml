@@ -23,7 +23,7 @@ fluent-bundle = "0.15"
 fluent-langneg = "0.13"
 intl-memoizer = "0.5"
 lazy_static = "1.2"
-unic-langid = { version = "0.9", features = ["macros"] }
+unic-langid = { version = "0.9", features = ["macros", "serde"] }
 
 # Page features
 time = "0.3"

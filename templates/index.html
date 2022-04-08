@@ -17,7 +17,15 @@
 <div class="uk-section uk-section-primary">
     <div class="uk-container">
         <h1 class="uk-heading-line uk-text-center"><span>{{ lang.m("halo-2") }}</span></h1>
-        <p class="uk-text-center">{{ lang.m("meta-description") }}</p>
+        <p class="uk-margin-remove-bottom uk-text-center">{{ lang.m("meta-description") }}</p>
+        <div class="uk-margin-top uk-margin-right uk-position-top-right">
+            <label for="language-nav" hidden>{{ lang.m("language") }}</label>
+            <select id="language-nav" data-current-lang="{{lang}}">
+                {% for locale in locales %}
+                <option title="{{locale.text}} ({{locale.lang}})" value="{{locale.lang}}">{{locale.text}}
+                    ({{locale.lang}})</option>{% endfor %}
+            </select>
+        </div>
     </div>
 </div>
 <div class="uk-section uk-section-default">
@@ -141,4 +149,5 @@
 </div>
 
 <script>hljs.highlightAll();</script>
+<script src="/static/scripts/languages.js"></script>
 {% endblock %}
